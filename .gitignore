@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build
+.next/
+dist/
+.expo/
+
+# Env
+.env
+.env.local
+.env*.local
+
+# OS
+.DS_Store
+
+# Turbo
+.turbo/

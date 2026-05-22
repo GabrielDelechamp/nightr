@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "Nightr",
+    "slug": "nightr",
+    "version": "1.0.0",
+    "scheme": "nightr",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "plugins": [
+      "expo-router",
+      "expo-status-bar"
+    ],
+    "android": {
+      "package": "com.anonymous.nightr"
+    }
+  }
+}

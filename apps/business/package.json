@@ -1,0 +1,15 @@
+{
+  "name": "@nightr/business",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@nightr/supabase": "workspace:*",
+    "@nightr/types": "workspace:*"
+  }
+}
