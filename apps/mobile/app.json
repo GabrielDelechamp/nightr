@@ -13,7 +13,7 @@
       "expo-status-bar"
     ],
     "android": {
-      "package": "com.anonymous.nightr"
+      "package": "com.nightr"
     }
   }
 }
