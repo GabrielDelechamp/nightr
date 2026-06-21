@@ -6,12 +6,16 @@ const workspaceRoot = path.resolve(projectRoot, '../..')
 
 const config = getDefaultConfig(projectRoot)
 
-// Permettre à Metro de lire en dehors de apps/mobile
-config.watchFolders = [workspaceRoot]
+config.watchFolders = [
+  workspaceRoot,
+  'C:\\ps', // pnpm custom virtual-store-dir
+]
 
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
   path.resolve(workspaceRoot, 'node_modules'),
 ]
+
+config.resolver.unstable_enablePackageExports = true
 
 module.exports = config

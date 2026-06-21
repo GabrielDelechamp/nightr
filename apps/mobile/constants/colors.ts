@@ -4,6 +4,7 @@ export const Colors = {
 
   navy: '#002147',
   slate: '#2f496a',
+  slateLight: 'rgba(47, 73, 106, 0.5)',
 
   cream: '#faf2da',
   ivory: '#fffaf1',

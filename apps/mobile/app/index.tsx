@@ -1,11 +1,11 @@
 import { Text, View } from 'react-native'
-import Navbar from './components/navbar.tsx'
+import Navbar from '../components/navbar'
 
 export default function Home() {
   return (
     <View>
       <Text>Nightr</Text>
-      <Navbar activeTab="home" onTabPress={(tab) => console.log('Pressed tab:', tab)} />
+      <Navbar activeTab="map" onTabPress={(tab) => console.log('Pressed tab:', tab)} />
     </View>
   )
 }
