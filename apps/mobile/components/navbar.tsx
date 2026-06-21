@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import { Colors } from '../constants/colors'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -89,22 +89,22 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 100,
 
-    backgroundColor: 'transparent',
-
     transform: [
       { translateY: -8 },
     ],
 
-    shadowColor: Colors.purple,
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-
-    shadowOpacity: 0.8,
-    shadowRadius: 45,
-
-    elevation: 40,
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'transparent',
+        shadowColor: Colors.purple,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.8,
+        shadowRadius: 45,
+      },
+      android: {
+        backgroundColor: `${Colors.purple}28`,
+      },
+    }),
   },
 
 
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
 
     backgroundColor: Colors.purple,
 
-    opacity: 0.12,
+    opacity: Platform.OS === 'android' ? 0.32 : 0.12,
 
     transform: [
       { translateY: -8 },
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
 
     backgroundColor: Colors.purple,
 
-    opacity: 0.22,
+    opacity: Platform.OS === 'android' ? 0.5 : 0.22,
 
     transform: [
       { translateY: -8 },
@@ -175,17 +175,17 @@ const styles = StyleSheet.create({
 
     borderColor: Colors.purple,
 
-    shadowColor: Colors.purple,
-
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-
-    shadowOpacity: 1,
-    shadowRadius: 18,
-
-    elevation: 25,
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.purple,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 1,
+        shadowRadius: 18,
+      },
+      android: {
+        elevation: 12,
+      },
+    }),
   },
 
 })
