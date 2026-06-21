@@ -1,20 +1,33 @@
-import { Text, View } from 'react-native'
+import { useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import Navbar from '../components/navbar'
-import Tag from '../components/tag'
-import { Colors } from '../constants/colors'
-import Chip from '../components/chip'
-import Badge from '../components/badge'
-import Button from '../components/button'
+import { useTheme } from '../context/ThemeContext'
+
+type Tab = 'event' | 'trending' | 'map' | 'favorites' | 'profile'
 
 export default function Home() {
+  const { theme } = useTheme()
+  const [activeTab, setActiveTab] = useState<Tab>('map')
+
   return (
-    <View>
-      <Text>Nightr</Text>
-      <Tag label="Trending" color={Colors.purple} icon="trending-up-outline" variant="ghost" />
-      <Chip label="Explore" variant="filled" />
-      <Badge label="New" variant="ghost" />
-      <Button label="Get Started" variant="filled" color={Colors.blue} />
-      <Navbar activeTab="map" onTabPress={(tab) => console.log('Pressed tab:', tab)} />
-    </View>
+    <SafeAreaView style={[styles.root, { backgroundColor: theme.bg }]} edges={['top']}>
+      <View style={styles.content} />
+      <View style={styles.navbarWrapper}>
+        <Navbar activeTab={activeTab} onTabPress={setActiveTab} />
+      </View>
+    </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+  },
+  navbarWrapper: {
+    paddingBottom: 10,
+  },
+})

@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native'
-import { Colors } from '../constants/colors'
-import { resolveVariant, Variant } from '../constants/variants'
+import { Colors } from '../../constants/colors'
+import { resolveVariant, Variant } from '../../constants/variants'
 
 type Props = {
   label: string

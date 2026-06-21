@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { Colors } from '../constants/colors'
-import { resolveVariant, Variant } from '../constants/variants'
+import { Colors } from '../../constants/colors'
+import { resolveVariant, Variant } from '../../constants/variants'
 
 type Props = {
   label: string
