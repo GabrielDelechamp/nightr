@@ -10,10 +10,19 @@
     ],
     "plugins": [
       "expo-router",
-      "expo-status-bar"
+      "expo-status-bar",
+      "react-native-maps"
     ],
     "android": {
       "package": "com.nightr"
-    }
+    },
+    "ios": {},
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c0039cfd-41fe-4fa0-93c4-2cb0e8e1c821"
+      }
+    },
+    "owner": "eusebi0"
   }
 }

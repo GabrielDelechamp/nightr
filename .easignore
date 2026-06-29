@@ -1,0 +1,18 @@
+node_modules/
+.git/
+*.log
+.expo/
+
+# Autres apps du monorepo non nécessaires au build mobile
+apps/admin/
+apps/business/
+
+# Packages non utilisés par le build mobile
+packages/ui/
+
+# Ressources lourdes
+ressources/
+
+# Artifacts de build natif
+apps/mobile/android/
+apps/mobile/ios/
