@@ -1,9 +1,9 @@
 import type { MapStyleElement } from 'react-native-maps'
 
 export const nightrMapStyle: MapStyleElement[] = [
-  { elementType: 'geometry', stylers: [{ color: '#002147' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#002147' }] },
-  { elementType: 'labels.text.fill', stylers: [{ color: '#faf2da' }] },
+  { featureType: 'all', elementType: 'geometry', stylers: [{ color: '#002147' }] },
+  { featureType: 'all', elementType: 'labels.text.stroke', stylers: [{ color: '#002147' }] },
+  { featureType: 'all', elementType: 'labels.text.fill', stylers: [{ color: '#faf2da' }] },
 
   {
     featureType: 'administrative.locality',
@@ -13,8 +13,8 @@ export const nightrMapStyle: MapStyleElement[] = [
 
   {
     featureType: 'poi',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#5e91ff' }],
+    elementType: 'labels',
+    stylers: [{ visibility: 'off' }],
   },
   {
     featureType: 'poi.park',
@@ -23,7 +23,12 @@ export const nightrMapStyle: MapStyleElement[] = [
   },
 
   {
-    featureType: 'road',
+    featureType: 'road.local',
+    elementType: 'geometry',
+    stylers: [{ color: '#1a3350' }],
+  },
+  {
+    featureType: 'road.arterial',
     elementType: 'geometry',
     stylers: [{ color: '#2f496a' }],
   },
@@ -40,12 +45,12 @@ export const nightrMapStyle: MapStyleElement[] = [
   {
     featureType: 'road.highway',
     elementType: 'geometry',
-    stylers: [{ color: '#8a2be2' }],
+    stylers: [{ color: '#3a5a80' }],
   },
   {
     featureType: 'road.highway',
     elementType: 'geometry.stroke',
-    stylers: [{ color: '#5e0096' }],
+    stylers: [{ color: '#1a3350' }],
   },
   {
     featureType: 'road.highway',

@@ -1,9 +1,6 @@
 import { StyleSheet } from 'react-native'
-import MapView from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import { nightrMapStyle } from './nightr-map-style'
-
-// TODO: Switch to PROVIDER_GOOGLE + customMapStyle once GOOGLE_MAPS_API_KEY is set
-const USE_GOOGLE_MAPS = !!process.env.GOOGLE_MAPS_API_KEY
 
 type Region = {
   latitude: number
@@ -17,8 +14,8 @@ type Props = {
 }
 
 const DEFAULT_REGION: Region = {
-  latitude: 43.6047,
-  longitude: 1.4442,
+  latitude: 47.21811,
+  longitude: -1.55448,
   latitudeDelta: 0.05,
   longitudeDelta: 0.05,
 }
@@ -27,8 +24,8 @@ export default function NightrMap({ initialRegion = DEFAULT_REGION }: Props) {
   return (
     <MapView
       style={styles.map}
-      provider={USE_GOOGLE_MAPS ? 'google' : undefined}
-      customMapStyle={USE_GOOGLE_MAPS ? nightrMapStyle : undefined}
+      provider={PROVIDER_GOOGLE}
+      customMapStyle={nightrMapStyle}
       initialRegion={initialRegion}
       showsUserLocation
       showsMyLocationButton={false}
