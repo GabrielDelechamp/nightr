@@ -1,7 +1,7 @@
-import { StyleSheet } from 'react-native'
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import { StyleSheet, Text, View } from 'react-native'
+import ClusterMapView from 'react-native-map-clustering'
+import { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { nightrMapStyle } from './nightr-map-style'
-import { Colors } from '../../constants/colors'
 
 type Region = {
   latitude: number
@@ -29,30 +29,116 @@ const DEFAULT_REGION: Region = {
   longitudeDelta: 0.05,
 }
 
+type ClusterProps = {
+  id: number
+  geometry: { coordinates: [number, number] }
+  onPress: () => void
+  properties: { point_count: number }
+}
+
+function renderCluster(cluster: ClusterProps) {
+  const { id, geometry, onPress, properties } = cluster
+  const [longitude, latitude] = geometry.coordinates
+  const count = properties.point_count
+
+  return (
+    <Marker
+      key={`cluster-${id}`}
+      coordinate={{ latitude, longitude }}
+      onPress={onPress}
+      anchor={{ x: 0.5, y: 0.5 }}
+    >
+      <View style={styles.clusterOuter}>
+        <View style={styles.clusterMiddle} />
+        <Text style={styles.clusterText}>{count}</Text>
+      </View>
+    </Marker>
+  )
+}
+
 export default function NightrMap({ initialRegion = DEFAULT_REGION, markers = [] }: Props) {
   return (
-    <MapView
+    <ClusterMapView
       style={styles.map}
       provider={PROVIDER_GOOGLE}
       customMapStyle={nightrMapStyle}
       initialRegion={initialRegion}
       showsUserLocation
       showsMyLocationButton={false}
+      clusterColor="rgba(138, 43, 226, 0.55)"
+      clusterTextColor="#ffffff"
+      renderCluster={renderCluster}
     >
       {markers.map((marker) => (
         <Marker
           key={marker.id}
           coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
           title={marker.title}
-          pinColor={Colors.purple}
-        />
+          anchor={{ x: 0.5, y: 0.5 }}
+        >
+          <View style={styles.pinOuter}>
+            <View style={styles.pinMiddle} />
+            <View style={styles.pinInner} />
+          </View>
+        </Marker>
       ))}
-    </MapView>
+    </ClusterMapView>
   )
 }
 
 const styles = StyleSheet.create({
   map: {
     flex: 1,
+  },
+  pinOuter: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'rgba(138, 43, 226, 0.2)',
+    overflow: 'visible',
+  },
+  pinMiddle: {
+    position: 'absolute',
+    top: 7,
+    left: 7,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: 'rgba(138, 43, 226, 0.55)',
+  },
+  pinInner: {
+    position: 'absolute',
+    top: 11,
+    left: 11,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#ffffff',
+  },
+  clusterOuter: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(138, 43, 226, 0.2)',
+    overflow: 'visible',
+  },
+  clusterMiddle: {
+    position: 'absolute',
+    top: 7,
+    left: 7,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'rgba(138, 43, 226, 0.75)',
+  },
+  clusterText: {
+    position: 'absolute',
+    top: 14,
+    left: 0,
+    width: 44,
+    textAlign: 'center',
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '700',
   },
 })

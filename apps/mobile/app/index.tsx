@@ -1,22 +1,28 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Navbar from '../components/navbar'
 import NightrMap, { type MapMarker } from '../components/map/nightr-map'
+import FilterBar, { type FilterState } from '../components/map/filter-bar'
 import { getEstablishmentsByCity } from '@nightr/supabase'
 import { useTheme } from '../context/ThemeContext'
 
 type Tab = 'event' | 'trending' | 'map' | 'favorites' | 'profile'
 
 const NANTES_CITY_ID = '2cb017fe-b5bf-4463-9306-4a65f1ca6a42'
+const DEFAULT_FILTERS: FilterState = { live: false, ambiance: null, budget: null }
 
 export default function Home() {
   const { theme } = useTheme()
   const [activeTab, setActiveTab] = useState<Tab>('map')
   const [markers, setMarkers] = useState<MapMarker[]>([])
 
-  useEffect(() => {
-    getEstablishmentsByCity(NANTES_CITY_ID)
+  const fetchMarkers = useCallback((filters: FilterState) => {
+    getEstablishmentsByCity(NANTES_CITY_ID, {
+      live: filters.live,
+      ambiance: filters.ambiance,
+      budget: filters.budget,
+    })
       .then((establishments) =>
         setMarkers(
           establishments.map((e) => ({
@@ -30,10 +36,15 @@ export default function Home() {
       .catch(console.error)
   }, [])
 
+  useEffect(() => {
+    fetchMarkers(DEFAULT_FILTERS)
+  }, [fetchMarkers])
+
   return (
     <SafeAreaView style={[styles.root, { backgroundColor: theme.bg }]} edges={['top']}>
       <View style={styles.content}>
         <NightrMap markers={markers} />
+        <FilterBar onFiltersChange={fetchMarkers} />
       </View>
       <View style={styles.navbarWrapper}>
         <Navbar activeTab={activeTab} onTabPress={setActiveTab} />

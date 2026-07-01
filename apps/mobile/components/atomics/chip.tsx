@@ -1,4 +1,5 @@
-import { Pressable, Text, StyleSheet } from 'react-native'
+import { Pressable, Text, StyleSheet, View } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/colors'
 import { resolveVariant, Variant } from '../../constants/variants'
 
@@ -7,9 +8,10 @@ type Props = {
   onPress?: () => void
   variant?: Variant
   color?: string
+  chevron?: boolean
 }
 
-export default function Chip({ label, onPress, variant = 'outline', color = Colors.slate }: Props) {
+export default function Chip({ label, onPress, variant = 'outline', color = Colors.slate, chevron = false }: Props) {
   const { backgroundColor, borderColor, textColor } = resolveVariant(variant, color)
 
   return (
@@ -20,7 +22,12 @@ export default function Chip({ label, onPress, variant = 'outline', color = Colo
         { backgroundColor, borderColor, opacity: pressed ? 0.7 : 1 },
       ]}
     >
-      <Text style={[styles.label, { color: textColor }]}>{label}</Text>
+      <View style={styles.inner}>
+        <Text style={[styles.label, { color: textColor }]}>{label}</Text>
+        {chevron && (
+          <Ionicons name="chevron-down" size={13} color={textColor} style={styles.icon} />
+        )}
+      </View>
     </Pressable>
   )
 }
@@ -33,8 +40,16 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1.5,
   },
+  inner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
   label: {
     fontSize: 14,
     fontWeight: '500',
+  },
+  icon: {
+    marginTop: 1,
   },
 })
