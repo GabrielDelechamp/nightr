@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router'
 import { NavigationBar } from 'expo-navigation-bar'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { ThemeProvider, useTheme } from '../context/ThemeContext'
 
 function ThemedShell() {
@@ -16,10 +17,12 @@ function ThemedShell() {
 
 export default function RootLayout() {
   return (
-    <SafeAreaProvider>
-      <ThemeProvider>
-        <ThemedShell />
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <ThemedShell />
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   )
 }

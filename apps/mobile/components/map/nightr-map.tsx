@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import ClusterMapView from 'react-native-map-clustering'
-import { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { nightrMapStyle } from './nightr-map-style'
 
 type Region = {
@@ -20,6 +20,7 @@ export type MapMarker = {
 type Props = {
   initialRegion?: Region
   markers?: MapMarker[]
+  onMarkerPress?: (marker: MapMarker) => void
 }
 
 const DEFAULT_REGION: Region = {
@@ -56,7 +57,7 @@ function renderCluster(cluster: ClusterProps) {
   )
 }
 
-export default function NightrMap({ initialRegion = DEFAULT_REGION, markers = [] }: Props) {
+export default function NightrMap({ initialRegion = DEFAULT_REGION, markers = [], onMarkerPress }: Props) {
   return (
     <ClusterMapView
       style={styles.map}
@@ -73,13 +74,14 @@ export default function NightrMap({ initialRegion = DEFAULT_REGION, markers = []
         <Marker
           key={marker.id}
           coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-          title={marker.title}
           anchor={{ x: 0.5, y: 0.5 }}
+          onPress={() => onMarkerPress?.(marker)}
         >
           <View style={styles.pinOuter}>
             <View style={styles.pinMiddle} />
             <View style={styles.pinInner} />
           </View>
+          <Callout tooltip><View /></Callout>
         </Marker>
       ))}
     </ClusterMapView>

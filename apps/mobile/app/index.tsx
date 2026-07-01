@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Navbar from '../components/navbar'
 import NightrMap, { type MapMarker } from '../components/map/nightr-map'
 import FilterBar, { type FilterState } from '../components/map/filter-bar'
+import EstablishmentPanel from '../components/map/establishment-panel'
 import { getEstablishmentsByCity } from '@nightr/supabase'
 import { useTheme } from '../context/ThemeContext'
 
@@ -16,6 +17,7 @@ export default function Home() {
   const { theme } = useTheme()
   const [activeTab, setActiveTab] = useState<Tab>('map')
   const [markers, setMarkers] = useState<MapMarker[]>([])
+  const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null)
 
   const fetchMarkers = useCallback((filters: FilterState) => {
     getEstablishmentsByCity(NANTES_CITY_ID, {
@@ -43,8 +45,9 @@ export default function Home() {
   return (
     <SafeAreaView style={[styles.root, { backgroundColor: theme.bg }]} edges={['top']}>
       <View style={styles.content}>
-        <NightrMap markers={markers} />
+        <NightrMap markers={markers} onMarkerPress={setSelectedMarker} />
         <FilterBar onFiltersChange={fetchMarkers} />
+        <EstablishmentPanel marker={selectedMarker} onClose={() => setSelectedMarker(null)} />
       </View>
       <View style={styles.navbarWrapper}>
         <Navbar activeTab={activeTab} onTabPress={setActiveTab} />
