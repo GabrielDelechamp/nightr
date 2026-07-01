@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { nightrMapStyle } from './nightr-map-style'
+import { Colors } from '../../constants/colors'
 
 type Region = {
   latitude: number
@@ -9,8 +10,16 @@ type Region = {
   longitudeDelta: number
 }
 
+export type MapMarker = {
+  id: string
+  latitude: number
+  longitude: number
+  title?: string
+}
+
 type Props = {
   initialRegion?: Region
+  markers?: MapMarker[]
 }
 
 const DEFAULT_REGION: Region = {
@@ -20,7 +29,7 @@ const DEFAULT_REGION: Region = {
   longitudeDelta: 0.05,
 }
 
-export default function NightrMap({ initialRegion = DEFAULT_REGION }: Props) {
+export default function NightrMap({ initialRegion = DEFAULT_REGION, markers = [] }: Props) {
   return (
     <MapView
       style={styles.map}
@@ -29,7 +38,16 @@ export default function NightrMap({ initialRegion = DEFAULT_REGION }: Props) {
       initialRegion={initialRegion}
       showsUserLocation
       showsMyLocationButton={false}
-    />
+    >
+      {markers.map((marker) => (
+        <Marker
+          key={marker.id}
+          coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+          title={marker.title}
+          pinColor={Colors.purple}
+        />
+      ))}
+    </MapView>
   )
 }
 
