@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/colors'
+import { FontFamily } from '../../constants/fonts'
 import { resolveVariant, Variant } from '../../constants/variants'
 
 type Props = {
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   label: {
+    fontFamily: FontFamily.medium,
     fontSize: 12,
-    fontWeight: '500',
   },
 })

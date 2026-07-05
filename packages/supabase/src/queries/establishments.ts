@@ -57,12 +57,21 @@ export async function getEstablishmentsByCity(
 }
 
 export async function getEstablishmentById(id: string): Promise<Establishment | null> {
-  const { data, error } = await supabase
-    .from('establishments')
-    .select('*, categories(*), cities(*), events(*), photos(*), opening_hours(*)')
-    .eq('establishment_id', id)
-    .single()
+  const [establishmentRes, photosRes] = await Promise.all([
+    supabase
+      .from('establishments')
+      .select('*, categories(*), cities(*), events(*), opening_hours(*), reviews(rating)')
+      .eq('establishment_id', id)
+      .single(),
+    supabase
+      .from('photos')
+      .select('*')
+      .eq('entity_id', id)
+      .eq('entity_type', 'establishment'),
+  ])
 
-  if (error) throw error
-  return data
+  if (establishmentRes.error) throw establishmentRes.error
+  if (!establishmentRes.data) return null
+
+  return { ...establishmentRes.data, photos: photosRes.data ?? [] }
 }

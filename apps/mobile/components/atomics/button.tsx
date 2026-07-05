@@ -1,5 +1,6 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native'
 import { Colors } from '../../constants/colors'
+import { FontFamily } from '../../constants/fonts'
 import { resolveVariant, Variant } from '../../constants/variants'
 
 type Props = {
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   label: {
+    fontFamily: FontFamily.semiBold,
     fontSize: 16,
-    fontWeight: '600',
   },
 })

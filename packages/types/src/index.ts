@@ -63,6 +63,7 @@ export interface Establishment {
   website?: string
   instagram?: string
   ambiance?: string
+  tags?: string[]
   click_count: number
   view_count: number
   is_validated: boolean
@@ -100,6 +101,25 @@ export interface Review {
   updated_at: string
   establishment_id: string
   user_id: string
+}
+
+// ─── Opening Hours ───────────────────────────────────────
+export interface OpeningHour {
+  hours_id: string
+  day_of_week: number  // 0=Lun … 6=Dim
+  open_time: string    // "18:00:00"
+  close_time: string   // "02:00:00"
+  is_closed: boolean
+  establishment_id: string
+}
+
+// ─── Establishment full (avec relations) ─────────────────
+export interface EstablishmentFull extends Establishment {
+  categories: Category | null
+  photos: Photo[]
+  events: Event[]
+  opening_hours: OpeningHour[]
+  reviews: Review[]
 }
 
 // ─── Misc ─────────────────────────────────────────────────

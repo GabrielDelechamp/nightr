@@ -1,6 +1,7 @@
 import { Pressable, Text, StyleSheet, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/colors'
+import { FontFamily } from '../../constants/fonts'
 import { resolveVariant, Variant } from '../../constants/variants'
 
 type Props = {
@@ -23,7 +24,9 @@ export default function Chip({ label, onPress, variant = 'outline', color = Colo
       ]}
     >
       <View style={styles.inner}>
-        <Text style={[styles.label, { color: textColor }]}>{label}</Text>
+        <Text style={[styles.label, { color: textColor }]}>
+          {label.charAt(0).toUpperCase() + label.slice(1)}
+        </Text>
         {chevron && (
           <Ionicons name="chevron-down" size={13} color={textColor} style={styles.icon} />
         )}
@@ -46,8 +49,9 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   label: {
+    fontFamily: FontFamily.medium,
     fontSize: 14,
-    fontWeight: '500',
+    includeFontPadding: false,
   },
   icon: {
     marginTop: 1,

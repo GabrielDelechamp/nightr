@@ -1,5 +1,6 @@
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Colors } from '../../constants/colors'
+import { FontFamily } from '../../constants/fonts'
 
 export type MenuOption = { label: string; value: string }
 
@@ -65,9 +66,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
+    fontFamily: FontFamily.displaySemiBold,
     color: Colors.ivory,
     fontSize: 16,
-    fontWeight: '600',
     paddingHorizontal: 20,
     marginBottom: 12,
   },
@@ -84,12 +85,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(47, 73, 106, 0.3)',
   },
   optionLabel: {
+    fontFamily: FontFamily.regular,
     color: Colors.cream,
     fontSize: 15,
   },
   optionLabelSelected: {
+    fontFamily: FontFamily.semiBold,
     color: Colors.purple,
-    fontWeight: '600',
   },
   dot: {
     width: 8,
