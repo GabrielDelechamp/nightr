@@ -1,13 +1,56 @@
 import { useState } from 'react'
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
+import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/colors'
 import { FontFamily } from '../../constants/fonts'
 import FullscreenPhoto from '../atomics/fullscreen-photo'
+import { isTrustedImageUrl } from '../../utils/safe-image'
 import type { Photo } from '@nightr/types'
 
 type Props = {
   photos: Photo[]
+}
+
+type ImageStatus = 'loading' | 'loaded' | 'error'
+
+function PhotoCard({ photo, onPress }: { photo: Photo; onPress: () => void }) {
+  const trusted = isTrustedImageUrl(photo.url)
+  const [status, setStatus] = useState<ImageStatus>(trusted ? 'loading' : 'error')
+
+  return (
+    <Pressable
+      style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+      onPress={trusted ? onPress : undefined}
+      disabled={!trusted}
+    >
+      {status === 'error' ? (
+        <View style={styles.fallback}>
+          <Ionicons name="image-outline" size={28} color={Colors.slateLight} />
+        </View>
+      ) : (
+        <Image
+          source={{ uri: photo.url }}
+          style={styles.image}
+          resizeMode="cover"
+          onLoad={() => setStatus('loaded')}
+          onError={() => setStatus('error')}
+        />
+      )}
+
+      {status === 'loading' && (
+        <View style={styles.loader}>
+          <ActivityIndicator color={Colors.purple} />
+        </View>
+      )}
+
+      {photo.is_cover && status !== 'error' && (
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>Cover</Text>
+        </View>
+      )}
+    </Pressable>
+  )
 }
 
 export default function PanelPhotos({ photos }: Props) {
@@ -27,21 +70,14 @@ export default function PanelPhotos({ photos }: Props) {
         style={styles.scroll}
       >
         {photos.map((photo, index) => (
-          <Pressable
+          <PhotoCard
             key={photo.photo_id}
-            style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+            photo={photo}
             onPress={() => {
               setViewerIndex(index)
               setViewerVisible(true)
             }}
-          >
-            <Image source={{ uri: photo.url }} style={styles.image} resizeMode="cover" />
-            {photo.is_cover && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>Cover</Text>
-              </View>
-            )}
-          </Pressable>
+          />
         ))}
       </ScrollView>
 
@@ -76,6 +112,21 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+  },
+  loader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fallback: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   badge: {
     position: 'absolute',

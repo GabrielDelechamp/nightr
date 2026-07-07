@@ -2,6 +2,7 @@ import { Linking, Pressable, Share, StyleSheet, Text, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/colors'
 import { FontFamily } from '../../constants/fonts'
+import { openPhone } from '../../utils/safe-linking'
 
 type Props = {
   name: string
@@ -25,11 +26,15 @@ export default function PanelActions({ name, address, phone }: Props) {
         Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`)
       },
     },
-    {
-      icon: 'call-outline',
-      label: 'Appeler',
-      onPress: () => phone && Linking.openURL(`tel:${phone}`),
-    },
+    ...(phone
+      ? [
+          {
+            icon: 'call-outline' as const,
+            label: 'Appeler',
+            onPress: () => openPhone(phone),
+          },
+        ]
+      : []),
     {
       icon: 'share-social-outline',
       label: 'Partager',

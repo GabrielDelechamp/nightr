@@ -10,7 +10,7 @@ type Props = {
 }
 
 export default function OverviewTab({ establishment }: Props) {
-  const cityName = (establishment as any).cities?.name
+  const cityName = establishment.cities?.name
 
   return (
     <>

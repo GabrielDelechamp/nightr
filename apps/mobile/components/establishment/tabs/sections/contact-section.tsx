@@ -1,7 +1,8 @@
-import { Linking, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../../../constants/colors'
 import { FontFamily } from '../../../../constants/fonts'
+import { openPhone, openWebsite } from '../../../../utils/safe-linking'
 
 type Props = {
   phone?: string
@@ -16,7 +17,7 @@ export default function ContactSection({ phone, website }: Props) {
       {phone && (
         <Pressable
           style={({ pressed }) => [styles.row, pressed && styles.pressed]}
-          onPress={() => Linking.openURL(`tel:${phone}`)}
+          onPress={() => openPhone(phone)}
         >
           <Ionicons name="call-outline" size={18} color={Colors.purple} />
           <Text style={styles.value}>{phone}</Text>
@@ -26,7 +27,7 @@ export default function ContactSection({ phone, website }: Props) {
       {website && (
         <Pressable
           style={({ pressed }) => [styles.row, pressed && styles.pressed]}
-          onPress={() => Linking.openURL(website.startsWith('http') ? website : `https://${website}`)}
+          onPress={() => openWebsite(website)}
         >
           <Ionicons name="globe-outline" size={18} color={Colors.purple} />
           <Text style={styles.value}>{website}</Text>

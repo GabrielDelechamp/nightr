@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { FontFamily } from '../../constants/fonts'
+import { isTrustedImageUrl } from '../../utils/safe-image'
 
 const { width: W, height: H } = Dimensions.get('window')
 
@@ -29,10 +30,7 @@ export default function FullscreenPhoto({ uris, initialIndex, visible, onClose }
   useEffect(() => {
     if (visible) {
       setCurrent(initialIndex)
-      // petit délai pour que la FlatList soit montée avant de scroller
-      setTimeout(() => {
-        listRef.current?.scrollToIndex({ index: initialIndex, animated: false })
-      }, 50)
+      listRef.current?.scrollToIndex({ index: initialIndex, animated: false })
     }
   }, [visible, initialIndex])
 
@@ -54,13 +52,22 @@ export default function FullscreenPhoto({ uris, initialIndex, visible, onClose }
           showsHorizontalScrollIndicator={false}
           initialScrollIndex={initialIndex}
           getItemLayout={(_, index) => ({ length: W, offset: W * index, index })}
+          onScrollToIndexFailed={(info) => {
+            listRef.current?.scrollToOffset({ offset: info.averageItemLength * info.index, animated: false })
+          }}
           onMomentumScrollEnd={(e) => {
             const index = Math.round(e.nativeEvent.contentOffset.x / W)
             setCurrent(index)
           }}
           renderItem={({ item }) => (
             <Pressable style={styles.page} onPress={onClose}>
-              <Image source={{ uri: item }} style={styles.image} resizeMode="contain" />
+              {isTrustedImageUrl(item) ? (
+                <Image source={{ uri: item }} style={styles.image} resizeMode="contain" />
+              ) : (
+                <View style={styles.fallback}>
+                  <Ionicons name="image-outline" size={40} color="rgba(255,255,255,0.4)" />
+                </View>
+              )}
             </Pressable>
           )}
           keyExtractor={(_, i) => i.toString()}
@@ -93,6 +100,12 @@ const styles = StyleSheet.create({
   image: {
     width: W,
     height: H,
+  },
+  fallback: {
+    width: W,
+    height: H,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   closeBtn: {
     position: 'absolute',

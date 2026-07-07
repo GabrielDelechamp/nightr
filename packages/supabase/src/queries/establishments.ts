@@ -1,11 +1,14 @@
 import { supabase } from '../client'
-import type { Establishment } from '@nightr/types'
+import type { Establishment, EstablishmentFull } from '@nightr/types'
 
 export type EstablishmentFilters = {
   live?: boolean
   ambiance?: string | null
   budget?: string | null
 }
+
+// Doit rester synchronisé avec les options du filtre "Ambiance" (apps/mobile/components/map/filter-bar.tsx)
+const KNOWN_AMBIANCES = ['festif', 'électro', 'rock', 'underground', 'convivial', 'musical']
 
 // Schema day_of_week: 0=Lun, 1=Mar, 2=Mer, 3=Jeu, 4=Ven, 5=Sam, 6=Dim
 // JS getDay():        0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
@@ -74,7 +77,7 @@ export async function getEstablishmentsByCity(
     .eq('city_id', cityId)
     .eq('is_validated', true)
 
-  if (filters.ambiance) {
+  if (filters.ambiance && KNOWN_AMBIANCES.includes(filters.ambiance)) {
     query = query.ilike('ambiance', `%${filters.ambiance}%`)
   }
 
@@ -95,7 +98,25 @@ export async function getEstablishmentsByCity(
   return results as Establishment[]
 }
 
-export async function getEstablishmentById(id: string): Promise<Establishment | null> {
+// Garde-fou runtime : si une migration DB renomme/retire un champ, on veut une erreur
+// explicite (catchée en amont) plutôt qu'un plantage plus tard sur une propriété undefined.
+function isValidEstablishmentFull(data: unknown): data is EstablishmentFull {
+  if (!data || typeof data !== 'object') return false
+  const e = data as Record<string, unknown>
+  return (
+    typeof e.establishment_id === 'string' &&
+    typeof e.name === 'string' &&
+    typeof e.address === 'string' &&
+    Array.isArray(e.photos) &&
+    Array.isArray(e.events) &&
+    Array.isArray(e.opening_hours) &&
+    Array.isArray(e.reviews) &&
+    Array.isArray(e.establishment_features) &&
+    Array.isArray(e.establishment_menu)
+  )
+}
+
+export async function getEstablishmentById(id: string): Promise<EstablishmentFull | null> {
   const [establishmentRes, photosRes] = await Promise.all([
     supabase
       .from('establishments')
@@ -112,5 +133,11 @@ export async function getEstablishmentById(id: string): Promise<Establishment | 
   if (establishmentRes.error) throw establishmentRes.error
   if (!establishmentRes.data) return null
 
-  return { ...establishmentRes.data, photos: photosRes.data ?? [] }
+  const establishment = { ...establishmentRes.data, photos: photosRes.data ?? [] }
+
+  if (!isValidEstablishmentFull(establishment)) {
+    throw new Error(`getEstablishmentById(${id}): réponse Supabase de forme inattendue`)
+  }
+
+  return establishment
 }

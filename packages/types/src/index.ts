@@ -145,6 +145,7 @@ export interface MenuItem {
 // ─── Establishment full (avec relations) ─────────────────
 export interface EstablishmentFull extends Establishment {
   categories: Category | null
+  cities: City | null
   photos: Photo[]
   events: Event[]
   opening_hours: OpeningHour[]

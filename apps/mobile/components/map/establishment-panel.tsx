@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, AppState, Pressable, StyleSheet, View } from 'react-native'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import type { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/src/components/bottomSheetBackdrop/types'
 import { Ionicons } from '@expo/vector-icons'
@@ -35,13 +35,27 @@ export default function EstablishmentPanel({ marker, onClose }: Props) {
     setLoading(true)
     setError(false)
     getEstablishmentById(id)
-      .then((data) => setEstablishment(data as EstablishmentFull))
+      .then((data) => setEstablishment(data))
       .catch((err) => {
         console.error(err)
         setError(true)
       })
       .finally(() => setLoading(false))
   }, [])
+
+  const markerRef = useRef(marker)
+  markerRef.current = marker
+
+  useEffect(() => {
+    const appState = { current: AppState.currentState }
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      if (appState.current.match(/inactive|background/) && nextState === 'active' && markerRef.current) {
+        loadEstablishment(markerRef.current.id)
+      }
+      appState.current = nextState
+    })
+    return () => subscription.remove()
+  }, [loadEstablishment])
 
   useEffect(() => {
     if (marker) {

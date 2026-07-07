@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../../constants/colors'
 import { FontFamily } from '../../../constants/fonts'
 import FullscreenPhoto from '../../atomics/fullscreen-photo'
+import { isTrustedImageUrl } from '../../../utils/safe-image'
 import type { Photo } from '@nightr/types'
 
 const { width: W } = Dimensions.get('window')
@@ -12,6 +14,36 @@ const FULL_W = W - H_PADDING * 2
 const HALF_W = (FULL_W - GAP) / 2
 
 type Props = { photos: Photo[] }
+
+function GalleryImage({
+  uri,
+  cardStyle,
+  imageStyle,
+  onPress,
+}: {
+  uri: string
+  cardStyle: object
+  imageStyle: object
+  onPress: () => void
+}) {
+  const trusted = isTrustedImageUrl(uri)
+
+  return (
+    <Pressable
+      style={({ pressed }) => [cardStyle, pressed && styles.pressed]}
+      onPress={trusted ? onPress : undefined}
+      disabled={!trusted}
+    >
+      {trusted ? (
+        <Image source={{ uri }} style={imageStyle} resizeMode="cover" />
+      ) : (
+        <View style={[imageStyle, styles.fallback]}>
+          <Ionicons name="image-outline" size={24} color={Colors.slateLight} />
+        </View>
+      )}
+    </Pressable>
+  )
+}
 
 export default function GalleryTab({ photos }: Props) {
   const [viewerIndex, setViewerIndex] = useState(0)
@@ -50,28 +82,28 @@ export default function GalleryTab({ photos }: Props) {
       <View style={styles.grid}>
         {rows.map((row, ri) =>
           row.type === 'full' ? (
-            <Pressable
+            <GalleryImage
               key={ri}
-              style={({ pressed }) => [styles.fullCard, pressed && styles.pressed]}
+              uri={uris[row.index]}
+              cardStyle={styles.fullCard}
+              imageStyle={styles.fullImage}
               onPress={() => open(row.index)}
-            >
-              <Image source={{ uri: uris[row.index] }} style={styles.fullImage} resizeMode="cover" />
-            </Pressable>
+            />
           ) : (
             <View key={ri} style={styles.pairRow}>
-              <Pressable
-                style={({ pressed }) => [styles.halfCard, pressed && styles.pressed]}
+              <GalleryImage
+                uri={uris[row.indexA]}
+                cardStyle={styles.halfCard}
+                imageStyle={styles.halfImage}
                 onPress={() => open(row.indexA)}
-              >
-                <Image source={{ uri: uris[row.indexA] }} style={styles.halfImage} resizeMode="cover" />
-              </Pressable>
+              />
               {row.indexB !== -1 ? (
-                <Pressable
-                  style={({ pressed }) => [styles.halfCard, pressed && styles.pressed]}
+                <GalleryImage
+                  uri={uris[row.indexB as number]}
+                  cardStyle={styles.halfCard}
+                  imageStyle={styles.halfImage}
                   onPress={() => open(row.indexB as number)}
-                >
-                  <Image source={{ uri: uris[row.indexB as number] }} style={styles.halfImage} resizeMode="cover" />
-                </Pressable>
+                />
               ) : (
                 <View style={[styles.halfCard, styles.halfCardEmpty]} />
               )}
@@ -111,6 +143,10 @@ const styles = StyleSheet.create({
   pairRow: {
     flexDirection: 'row',
     gap: GAP,
+  },
+  fallback: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   halfCard: {
     width: HALF_W,

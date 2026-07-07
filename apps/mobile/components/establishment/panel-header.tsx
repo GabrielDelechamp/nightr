@@ -3,15 +3,13 @@ import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/colors'
 import { FontFamily } from '../../constants/fonts'
 import type { Category, OpeningHour, Review } from '@nightr/types'
+import { nowInEstablishmentTimezone } from '../../utils/timezone'
 
 function getTodayStatus(hours: OpeningHour[]) {
-  const jsDay = new Date().getDay()
-  const dbDay = (jsDay + 6) % 7
+  const { dbDay, minutes: cur } = nowInEstablishmentTimezone()
   const today = hours.find((h) => h.day_of_week === dbDay)
   if (!today || today.is_closed) return { isOpen: false, label: 'Fermé' }
 
-  const now = new Date()
-  const cur = now.getHours() * 60 + now.getMinutes()
   const [oh, om] = today.open_time.split(':').map(Number)
   const [ch, cm] = today.close_time.split(':').map(Number)
   let close = ch * 60 + cm
