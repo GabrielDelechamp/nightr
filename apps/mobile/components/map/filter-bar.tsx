@@ -4,7 +4,7 @@ import Chip from '../atomics/chip'
 import FilterMenu, { type MenuOption } from './filter-menu'
 import { Colors } from '../../constants/colors'
 
-type MenuFilterKey = 'ambiance' | 'distance' | 'budget' | 'affluence'
+type MenuFilterKey = 'ambiance' | 'distance' | 'budget'
 
 type Selections = Record<MenuFilterKey, string | null>
 
@@ -47,15 +47,6 @@ const MENU_FILTERS: { key: MenuFilterKey; label: string; options: MenuOption[] }
       { label: '> 20€', value: '20+' },
     ],
   },
-  {
-    key: 'affluence',
-    label: 'Affluence',
-    options: [
-      { label: 'Basse', value: 'low' },
-      { label: 'Moyenne', value: 'medium' },
-      { label: 'Élevée', value: 'high' },
-    ],
-  },
 ]
 
 type Props = {
@@ -68,7 +59,6 @@ export default function FilterBar({ onFiltersChange }: Props) {
     ambiance: null,
     distance: null,
     budget: null,
-    affluence: null,
   })
   const [openMenu, setOpenMenu] = useState<MenuFilterKey | null>(null)
 
@@ -146,12 +136,7 @@ export default function FilterBar({ onFiltersChange }: Props) {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    position: 'absolute',
-    top: 16,
-    left: 0,
-    right: 0,
-  },
+  wrapper: {},
   row: {
     flexDirection: 'row',
     gap: 8,

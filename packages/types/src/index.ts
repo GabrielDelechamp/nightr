@@ -113,6 +113,35 @@ export interface OpeningHour {
   establishment_id: string
 }
 
+// ─── Features ────────────────────────────────────────────
+export type FeatureCategory = 'ambiance' | 'accessibilite' | 'services'
+
+export interface Feature {
+  feature_id: string
+  slug: string
+  label: string
+  icon: string
+  category: FeatureCategory
+  sort_order: number
+}
+
+export interface EstablishmentFeature {
+  feature_id: string
+  enabled: boolean
+  value_text?: string | null
+  features: Feature
+}
+
+// ─── Menu ─────────────────────────────────────────────────
+export interface MenuItem {
+  menu_id: string
+  name: string
+  description?: string | null
+  price_from?: number | null
+  price_to?: number | null
+  sort_order: number
+}
+
 // ─── Establishment full (avec relations) ─────────────────
 export interface EstablishmentFull extends Establishment {
   categories: Category | null
@@ -120,6 +149,8 @@ export interface EstablishmentFull extends Establishment {
   events: Event[]
   opening_hours: OpeningHour[]
   reviews: Review[]
+  establishment_features: EstablishmentFeature[]
+  establishment_menu: MenuItem[]
 }
 
 // ─── Misc ─────────────────────────────────────────────────

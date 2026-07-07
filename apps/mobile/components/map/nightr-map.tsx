@@ -15,6 +15,7 @@ export type MapMarker = {
   latitude: number
   longitude: number
   title?: string
+  categoryName?: string
 }
 
 type Props = {
